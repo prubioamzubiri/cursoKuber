@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: first-deployment
+  template:
+    metadata:
+      labels:
+        app: first-deployment
+    spec:
+      containers:
+      - name: first-deployment
+        image: nginx
+        ports:
+        - containerPort: 80

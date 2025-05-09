@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  privateimage-dep
+spec:
+  selector:
+    matchLabels:
+      app: privateimage
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app:  privateimage
+    spec:
+      containers:
+      - name:  privateimage
+        image:  prubioam/privatedocker:v1
+        ports:
+        - containerPort:  80
+      imagePullSecrets:
+      - name:  dockerhubsec

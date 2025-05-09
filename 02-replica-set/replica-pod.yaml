@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myfirstreplicaset
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: tknika-nginx
+  template:
+    metadata:
+      labels:
+        app: tknika-nginx
+    spec:
+      containers:
+      - name: myfirstcontainer
+        image: nginx
+        ports:
+        - containerPort: 80
