@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bigarren-container
+  namespace: default
+  labels:
+    app: bigarren-container
+spec:
+  selector:
+    matchLabels:
+      app: bigarren-container
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: bigarren-container
+    spec:
+      containers:
+      - name: bigarren-container
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: myfirstvolume
+      - name: contenido
+        image: ubuntu
+        command: ["/bin/sh"]
+        args: ["-c", "echo Kaixo Tknikatik > /data/index.html && tail -f /dev/null"]
+        volumeMounts:
+        - mountPath: /data
+          name: myfirstvolume
+      volumes:
+      - name: myfirstvolume
+        emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service-1
+  namespace: default
+spec:
+  selector:
+    app: bigarren-container
+  type: ClusterIP
+  ports:
+  - name: bigarren-container
+    protocol: TCP
+    port: 80
+    targetPort: 80
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  hirugarren-container
+  namespace: default
+  labels:
+    app:  hirugarren-container
+spec:
+  selector:
+    matchLabels:
+      app: hirugarren-container
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: hirugarren-container
+    spec:
+      containers:
+      - name: hirugarren-container
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: myfirstvolume
+      - name: contenido
+        image: ubuntu
+        command: ["/bin/sh"]
+        args: ["-c", "echo Kaixo Tknikatik 2 > /data/index.html && tail -f /dev/null"]
+        volumeMounts:
+        - mountPath: /data
+          name: myfirstvolume
+      volumes:
+      - name: myfirstvolume
+        emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service-2
+  namespace: default
+spec:
+  selector:
+    app: hirugarren-container
+  type: ClusterIP
+  ports:
+  - name: hirugarren-container
+    protocol: TCP
+    port: 80
+    targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tk-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: tk.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-service-1
+            port:
+              number: 80
+      - path: /tk-prueba
+        pathType: Prefix
+        backend:
+          service:
+            name: my-service-2
+            port:
+              number: 80
