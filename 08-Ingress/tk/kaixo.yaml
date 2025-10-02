@@ -33,9 +33,7 @@ spec:
       volumes:
       - name: myfirstvolume
         emptyDir: {}
-
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -50,9 +48,7 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 80
-
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -88,9 +84,7 @@ spec:
       volumes:
       - name: myfirstvolume
         emptyDir: {}
-
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -105,7 +99,6 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 80
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
